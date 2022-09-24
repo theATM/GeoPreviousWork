@@ -203,7 +203,12 @@ def decode_netout(netout, anchors, obj_thresh, net_h, net_w):
             x = (col + x) / grid_w # center position, unit: image width
             y = (row + y) / grid_h # center position, unit: image height
             w = anchors[2 * b + 0] * np.exp(w) / net_w # unit: image width
-            h = anchors[2 * b + 1] * np.exp(h) / net_h # unit: image height  
+            h = anchors[2 * b + 1] * np.exp(h) / net_h # unit: image height
+
+            import math
+            if math.isinf(x) or math.isinf(y) or math.isinf(w) or math.isinf(h) or \
+                    math.isnan(x) or math.isnan(y) or math.isnan(w) or math.isnan(h):
+                print("Memmory Error! - User error")
             
             # last elements are class probabilities
             classes = netout[row,col,b,5:]

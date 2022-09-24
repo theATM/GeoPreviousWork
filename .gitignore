@@ -1,6 +1,17 @@
+# Notebook used only in coolab
 main.ipynb
 # Pycharm project files
 .idea
+#Used Directiries:
+datasets
+cache
+img
+logs
+model
+predicts
+pretrained
+#Backend weights:
+backend.h5
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
