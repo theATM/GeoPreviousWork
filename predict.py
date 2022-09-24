@@ -14,6 +14,7 @@ def _main_(args):
     config_path  = args.conf
     input_path   = args.input
     output_path  = args.output
+    model_path = args.model
 
     with open(config_path) as config_buffer:    
         config = json.load(config_buffer)
@@ -30,7 +31,7 @@ def _main_(args):
     #   Load the model
     ###############################
     os.environ['CUDA_VISIBLE_DEVICES'] = config['train']['gpus']
-    infer_model = load_model(config['train']['saved_weights_name'])
+    infer_model = load_model(model_path)
 
     ###############################
     #   Predict bounding boxes 
@@ -127,7 +128,8 @@ if __name__ == '__main__':
     argparser.add_argument('-c', '--conf', help='path to configuration file', default='config.json')
     argparser.add_argument('-i', '--input', help='path to an image, a directory of images, a video, or webcam'
                            , default='./YOLOdatasets/testingsets1/image/')    
-    argparser.add_argument('-o', '--output', default='output/', help='path to output directory')   
-    
+    argparser.add_argument('-o', '--output', default='output/', help='path to output directory')
+    argparser.add_argument('-m', '--model', default='rsd.h5', help='model used in prediction')
+
     args = argparser.parse_args()
     _main_(args)
