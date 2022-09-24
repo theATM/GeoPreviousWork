@@ -4,7 +4,7 @@ import argparse
 import os
 import numpy as np
 import json
-import datetime
+from datetime import datetime
 from voc import parse_voc_annotation
 from yolo import create_yolov3_model, dummy_loss
 from generator import BatchGenerator
