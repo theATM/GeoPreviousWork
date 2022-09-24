@@ -4,6 +4,7 @@ import argparse
 import os
 import numpy as np
 import json
+import datetime
 from voc import parse_voc_annotation
 from yolo import create_yolov3_model, dummy_loss
 from generator import BatchGenerator
@@ -63,7 +64,10 @@ def create_training_instances(
     return train_ints, valid_ints, sorted(labels), max_box_per_image
 
 def create_callbacks(saved_weights_name, tensorboard_logs, model_to_save):
-    makedirs(tensorboard_logs)
+    now = datetime.now()  # Used to differentiate saved models
+    now_str = now.strftime("%d-%m-%Y_%H-%M")
+
+    makedirs(tensorboard_logs+'/'+now_str)
     
     early_stop = EarlyStopping(
         monitor     = 'loss', 
@@ -92,7 +96,7 @@ def create_callbacks(saved_weights_name, tensorboard_logs, model_to_save):
         min_lr   = 0
     )
     tensorboard = CustomTensorBoard(
-        log_dir                = tensorboard_logs,
+        log_dir                = tensorboard_logs+'/'+now_str,
         write_graph            = True,
         write_images           = True,
     )    
