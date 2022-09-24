@@ -116,7 +116,8 @@ def create_model(
     obj_scale,
     noobj_scale,
     xywh_scale,
-    class_scale  
+    class_scale,
+    debug
 ):
     if multi_gpu > 1:
         with tf.device('/cpu:0'):
@@ -132,7 +133,8 @@ def create_model(
                 obj_scale           = obj_scale,
                 noobj_scale         = noobj_scale,
                 xywh_scale          = xywh_scale,
-                class_scale         = class_scale
+                class_scale         = class_scale,
+                debug               = debug
             )
     else:
         template_model, infer_model = create_yolov3_model(
@@ -147,7 +149,8 @@ def create_model(
             obj_scale           = obj_scale,
             noobj_scale         = noobj_scale,
             xywh_scale          = xywh_scale,
-            class_scale         = class_scale
+            class_scale         = class_scale,
+            debug               = debug
         )  
 
     # load the pretrained weight if exists, otherwise load the backend weight only
@@ -244,6 +247,7 @@ def _main_(args):
         noobj_scale         = config['train']['noobj_scale'],
         xywh_scale          = config['train']['xywh_scale'],
         class_scale         = config['train']['class_scale'],
+        debug               = config['train']['debug'],
     )
 
     ###############################

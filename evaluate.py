@@ -66,6 +66,7 @@ def _main_(args):
             noobj_scale         = config['train']['noobj_scale'],
             xywh_scale          = config['train']['xywh_scale'],
             class_scale         = config['train']['class_scale'],
+            debug               = config['train']['debug'],
         )  
     
     

@@ -6,7 +6,7 @@ import tensorflow as tf
 
 class YoloLayer(Layer):
     def __init__(self, anchors, max_grid, batch_size, warmup_batches, ignore_thresh, 
-                    grid_scale, obj_scale, noobj_scale, xywh_scale, class_scale, 
+                    grid_scale, obj_scale, noobj_scale, xywh_scale, class_scale, debug,
                     **kwargs):
         # make the model settings persistent
         self.ignore_thresh  = ignore_thresh
@@ -16,7 +16,8 @@ class YoloLayer(Layer):
         self.obj_scale      = obj_scale
         self.noobj_scale    = noobj_scale
         self.xywh_scale     = xywh_scale
-        self.class_scale    = class_scale        
+        self.class_scale    = class_scale
+        self.debug          = debug
 
         # make a persistent mesh grid
         max_grid_h, max_grid_w = max_grid
@@ -176,17 +177,18 @@ class YoloLayer(Layer):
 
         loss = loss_xy + loss_wh + loss_conf + loss_class
 
-        loss = tf.Print(loss, [grid_h, avg_obj], message='avg_obj \t\t', summarize=1000)
-        loss = tf.Print(loss, [grid_h, avg_noobj], message='avg_noobj \t\t', summarize=1000)
-        loss = tf.Print(loss, [grid_h, avg_iou], message='avg_iou \t\t', summarize=1000)
-        loss = tf.Print(loss, [grid_h, avg_cat], message='avg_cat \t\t', summarize=1000)
-        loss = tf.Print(loss, [grid_h, recall50], message='recall50 \t', summarize=1000)
-        loss = tf.Print(loss, [grid_h, recall75], message='recall75 \t', summarize=1000)   
-        loss = tf.Print(loss, [grid_h, count], message='count \t', summarize=1000)     
-        loss = tf.Print(loss, [grid_h, tf.reduce_sum(loss_xy), 
-                                       tf.reduce_sum(loss_wh), 
-                                       tf.reduce_sum(loss_conf), 
-                                       tf.reduce_sum(loss_class)],  message='loss xy, wh, conf, class: \t',   summarize=1000)   
+        if self.debug is True:
+            loss = tf.Print(loss, [grid_h, avg_obj], message='avg_obj \t\t', summarize=1000)
+            loss = tf.Print(loss, [grid_h, avg_noobj], message='avg_noobj \t\t', summarize=1000)
+            loss = tf.Print(loss, [grid_h, avg_iou], message='avg_iou \t\t', summarize=1000)
+            loss = tf.Print(loss, [grid_h, avg_cat], message='avg_cat \t\t', summarize=1000)
+            loss = tf.Print(loss, [grid_h, recall50], message='recall50 \t', summarize=1000)
+            loss = tf.Print(loss, [grid_h, recall75], message='recall75 \t', summarize=1000)
+            loss = tf.Print(loss, [grid_h, count], message='count \t', summarize=1000)
+            loss = tf.Print(loss, [grid_h, tf.reduce_sum(loss_xy),
+                                           tf.reduce_sum(loss_wh),
+                                           tf.reduce_sum(loss_conf),
+                                           tf.reduce_sum(loss_class)],  message='loss xy, wh, conf, class: \t',   summarize=1000)
 
 
         return loss*self.grid_scale
@@ -227,7 +229,8 @@ def create_yolov3_model(
     obj_scale,
     noobj_scale,
     xywh_scale,
-    class_scale
+    class_scale,
+    debug
 ):
     input_image = Input(shape=(None, None, 3)) # net_h, net_w, 3
     true_boxes  = Input(shape=(1, 1, 1, max_box_per_image, 4))
@@ -303,7 +306,8 @@ def create_yolov3_model(
                             obj_scale,
                             noobj_scale,
                             xywh_scale,
-                            class_scale)([input_image, pred_yolo_1, true_yolo_1, true_boxes])
+                            class_scale,
+                            debug)([input_image, pred_yolo_1, true_yolo_1, true_boxes])
 
     # Layer 83 => 86
     x = _conv_block(x, [{'filter': 256, 'kernel': 1, 'stride': 1, 'bnorm': True, 'leaky': True, 'layer_idx': 84}], do_skip=False)
@@ -329,7 +333,8 @@ def create_yolov3_model(
                             obj_scale,
                             noobj_scale,
                             xywh_scale,
-                            class_scale)([input_image, pred_yolo_2, true_yolo_2, true_boxes])
+                            class_scale,
+                            debug)([input_image, pred_yolo_2, true_yolo_2, true_boxes])
 
     # Layer 95 => 98
     x = _conv_block(x, [{'filter': 128, 'kernel': 1, 'stride': 1, 'bnorm': True, 'leaky': True,   'layer_idx': 96}], do_skip=False)
@@ -353,7 +358,8 @@ def create_yolov3_model(
                             obj_scale,
                             noobj_scale,
                             xywh_scale,
-                            class_scale)([input_image, pred_yolo_3, true_yolo_3, true_boxes]) 
+                            class_scale,
+                            debug)([input_image, pred_yolo_3, true_yolo_3, true_boxes])
 
     train_model = Model([input_image, true_boxes, true_yolo_1, true_yolo_2, true_yolo_3], [loss_yolo_1, loss_yolo_2, loss_yolo_3])
     infer_model = Model(input_image, [pred_yolo_1, pred_yolo_2, pred_yolo_3])
