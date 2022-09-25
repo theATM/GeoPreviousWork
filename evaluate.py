@@ -11,12 +11,17 @@ from keras.callbacks import EarlyStopping, ModelCheckpoint
 from keras.optimizers import Adam
 from keras.models import load_model
 from yolo import create_yolov3_model, dummy_loss
-##### GG
+
 def _main_(args):
     config_path = args.conf
 
     with open(config_path) as config_buffer:    
         config = json.loads(config_buffer.read())
+
+    if args.model is None:
+        saved_weights_name = config['train']['saved_weights_name']
+    else:
+        saved_weights_name = args.model
 
     ###############################
     #   Create the validation generator
@@ -71,8 +76,8 @@ def _main_(args):
     
     
     os.environ['CUDA_VISIBLE_DEVICES'] = config['train']['gpus']
-    
-    saved_weights_name  = config['train']['saved_weights_name']
+
+
     lr                  = config['train']['learning_rate'],
     
     infer_model.load_weights(saved_weights_name)
@@ -80,7 +85,7 @@ def _main_(args):
     infer_model.compile(loss=dummy_loss, optimizer=optimizer) 
     
     infer_model.summary()
-    #infer_model = load_model(config['train']['saved_weights_name'])
+    #infer_model = load_model(saved_weights_name)
 
     # compute mAP for all the classes
     recall, precision, average_precisions = evaluate(infer_model, valid_generator)
@@ -95,7 +100,8 @@ def _main_(args):
 
 if __name__ == '__main__':
     argparser = argparse.ArgumentParser(description='Evaluate YOLO_v3 model on any dataset')
-    argparser.add_argument('-c', '--conf', help='path to configuration file', default='config.json')    
+    argparser.add_argument('-c', '--conf', help='path to configuration file', default='config.json')
+    argparser.add_argument('-m', '--model', default=None, help='model used in evaluation')
     
     args = argparser.parse_args()
     recalls, precisions, average_precisions = _main_(args)
