@@ -67,7 +67,7 @@ def create_callbacks(saved_weights_name, tensorboard_logs, model_to_save):
     now = datetime.now()  # Used to differentiate saved models
     now_str = now.strftime("%d-%m-%Y_%H-%M")
 
-    makedirs(tensorboard_logs+'/'+now_str)
+    makedirs(tensorboard_logs+'/run_'+now_str)
     
     early_stop = EarlyStopping(
         monitor     = 'loss', 
