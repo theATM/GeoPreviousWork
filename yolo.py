@@ -367,4 +367,4 @@ def create_yolov3_model(
     return [train_model, infer_model]
 
 def dummy_loss(y_true, y_pred):
-    return tf.sqrt(tf.reduce_sum(y_pred)+1e-7)
+    return tf.sqrt(tf.reduce_sum(y_pred)+1e-7) # I have added small epsylon to not get NaN loss

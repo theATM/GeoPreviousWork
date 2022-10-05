@@ -9,7 +9,7 @@ from utils.bbox import draw_boxes
 from keras.models import load_model
 from tqdm import tqdm
 import numpy as np
-
+import tensorflow as tf
 def _main_(args):
     config_path  = args.conf
     input_path   = args.input
@@ -117,10 +117,10 @@ def _main_(args):
             # predict the bounding boxes
             boxes = get_yolo_boxes(infer_model, [image], net_h, net_w, config['model']['anchors'], obj_thresh, nms_thresh)[0]
 
-            # summarize what we found
-            if config['train']['debug'] is True:
-                for i in range(len(boxes[0])):
-                    print(boxes[1][i], boxes[2][i])
+            # summarize what we found  - TODO Not working
+            #if config['train']['debug'] is True and len(boxes) > 0:
+            #    for i in range(len(boxes[0])):
+            #        print(boxes[1][i], boxes[2][i])
 
             # draw bounding boxes on the image using labels
             draw_boxes(image, boxes, config['model']['labels'], obj_thresh) 
