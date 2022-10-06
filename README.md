@@ -1,6 +1,12 @@
 # geospatial-object-detection
 The code is mainly derived from [experiencor](https://github.com/experiencor/keras-yolo3).
 
+Installs:
+nvidia-pyindex (version 1.0.5)
+nvidia-tensorflow[horovod] (and no tensorflow-gpu==1.15.5)
+or cpu
+
+
 
 # Paper：
 Zhuang S, Wang P, Jiang B, et al. A Single Shot Framework with Multi-Scale Feature Fusion for Geospatial Object Detection[J]. Remote Sensing, 2019, 11(5): 594.
