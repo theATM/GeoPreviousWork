@@ -2,9 +2,10 @@
 The code is mainly derived from [experiencor](https://github.com/experiencor/keras-yolo3).
 
 Installs:
-nvidia-pyindex (version 1.0.5)
+to use newer gpu install :
+nvidia-pyindex==1.0.5
 nvidia-tensorflow[horovod] (and no tensorflow-gpu==1.15.5)
-or cpu
+or use cpu
 
 
 
