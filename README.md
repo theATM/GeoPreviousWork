@@ -2,7 +2,15 @@
 
 This code is part of the Magister Thesis.
 It is a fork of the https://github.com/Dr-Zhuang/geospatial-object-detection
-a Tensorflow 1.x based Yolov3 framework for the remote sensing object detection.
+a Tensorflow 1.x based Yolov3 framework for the remote sensing object detection using the RSD-GOD dataset.
+
+RSD-GOD dataset is a remote sensing dataset with obejcts such as aribases, helicopters, planes and warships.
+Examples of detections (done on home trained model) can be seen on the figure bellow:
+
+![rsd_detections_org_my](https://github.com/theATM/geo-detection-notebook/assets/48883111/b38234f3-36cc-4efc-b86f-f4a0754d90f7)
+
+
+
 
 Main improvement over the existing code is an addition of a Docker based training pipeline.
 
