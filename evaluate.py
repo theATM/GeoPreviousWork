@@ -1,5 +1,7 @@
 #! /usr/bin/env python
 
+Valid = False
+
 import argparse
 import os
 import numpy as np
@@ -25,13 +27,21 @@ def _main_(args):
 
     ###############################
     #   Create the validation generator
-    ###############################  
-    valid_ints, labels = parse_voc_annotation(
-        config['valid']['valid_annot_folder'], 
-        config['valid']['valid_image_folder'], 
-        config['valid']['cache_name'],
-        config['model']['labels']
-    )
+    ###############################
+    if Valid :
+        valid_ints, labels = parse_voc_annotation(
+            config['valid']['valid_annot_folder'],
+            config['valid']['valid_image_folder'],
+            config['valid']['cache_name'],
+            config['model']['labels']
+        )
+    else:
+        valid_ints, labels = parse_voc_annotation(
+            config['test']['test_annot_folder'],
+            config['test']['test_image_folder'],
+            config['test']['cache_name'],
+            config['model']['labels']
+        )
 
     labels = labels.keys() if len(config['model']['labels']) == 0 else config['model']['labels']
     labels = sorted(labels)
@@ -49,6 +59,8 @@ def _main_(args):
         jitter              = 0.0, 
         norm                = normalize
     )
+
+    os.environ['CUDA_VISIBLE_DEVICES'] = config['train']['gpus']
 
     ###############################
     #   Load the model and do evaluation
@@ -73,9 +85,7 @@ def _main_(args):
             class_scale         = config['train']['class_scale'],
             debug               = config['train']['debug'],
         )  
-    
-    
-    os.environ['CUDA_VISIBLE_DEVICES'] = config['train']['gpus']
+
 
 
     lr                  = config['train']['learning_rate'],

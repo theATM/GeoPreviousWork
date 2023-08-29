@@ -63,7 +63,8 @@ def create_training_instances(
 
     return train_ints, valid_ints, sorted(labels), max_box_per_image
 
-def create_callbacks(saved_weights_name, tensorboard_logs, model_to_save):
+def \
+            create_callbacks(saved_weights_name, tensorboard_logs, model_to_save):
     now = datetime.now()  # Used to differentiate saved models
     now_str = now.strftime("%d-%m-%Y_%H-%M")
 
@@ -117,7 +118,8 @@ def create_model(
     noobj_scale,
     xywh_scale,
     class_scale,
-    debug
+    debug,
+    config
 ):
     if multi_gpu > 1:
         with tf.device('/cpu:0'):
@@ -155,10 +157,11 @@ def create_model(
 
     # load the pretrained weight if exists, otherwise load the backend weight only
     if os.path.exists(saved_weights_name): 
-        print("\nLoading pretrained weights.\n")
+        print("\nLoading last model's weights.\n")
         template_model.load_weights(saved_weights_name)
     else:
-        template_model.load_weights("backend.h5", by_name=True)       
+        print("\nLoading backend weights.\n")
+        template_model.load_weights(config["model"]["backend"], by_name=True)
 
     if multi_gpu > 1:
         train_model = multi_gpu_model(template_model, gpus=multi_gpu)
@@ -171,6 +174,7 @@ def create_model(
     return train_model, infer_model
 
 def _main_(args):
+    print("stater")
     config_path = args.conf
 
     with open(config_path) as config_buffer:    
@@ -179,6 +183,7 @@ def _main_(args):
     ###############################
     #   Parse the annotations 
     ###############################
+    print("beofre data")
     train_ints, valid_ints, labels, max_box_per_image = create_training_instances(
         config['train']['train_annot_folder'],
         config['train']['train_image_folder'],
@@ -192,7 +197,8 @@ def _main_(args):
 
     ###############################
     #   Create the generators 
-    ###############################    
+    ###############################
+    print("beofre gens")
     train_generator = BatchGenerator(
         instances           = train_ints, 
         anchors             = config['model']['anchors'],   
@@ -230,7 +236,7 @@ def _main_(args):
 
     os.environ['CUDA_VISIBLE_DEVICES'] = config['train']['gpus']
     multi_gpu = len(config['train']['gpus'].split(','))
-
+    print("beofre model")
     train_model, infer_model = create_model(
         nb_class            = len(labels), 
         anchors             = config['model']['anchors'], 
@@ -248,11 +254,13 @@ def _main_(args):
         xywh_scale          = config['train']['xywh_scale'],
         class_scale         = config['train']['class_scale'],
         debug               = config['train']['debug'],
+        config              = config,
     )
 
     ###############################
     #   Kick off the training
     ###############################
+    print("beofre train")
     callbacks = create_callbacks(config['train']['saved_weights_name'], config['train']['tensorboard_dir'], infer_model)
 
     train_model.summary()
@@ -265,7 +273,8 @@ def _main_(args):
         verbose          = 2 if config['train']['debug'] else 1,
         callbacks        = callbacks, 
         workers          = 4,
-        max_queue_size   = 8
+        max_queue_size   = 8,
+        validation_data = valid_generator
     )
 
     # make a GPU version of infer_model for evaluation
@@ -281,7 +290,9 @@ def _main_(args):
     # print the score
     for label, average_precision in average_precisions.items():
         print(labels[label] + ': {:.4f}'.format(average_precision))
-    print('mAP: {:.4f}'.format(sum(average_precisions.values()) / len(average_precisions)))           
+    print('mAP@50: {:.4f}'.format(sum(average_precisions.values()) / len(average_precisions)))
+
+
 
 if __name__ == '__main__':
     argparser = argparse.ArgumentParser(description='train and evaluate YOLO_v3 model on any dataset')

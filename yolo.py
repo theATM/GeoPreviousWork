@@ -189,8 +189,6 @@ class YoloLayer(Layer):
                                            tf.reduce_sum(loss_wh),
                                            tf.reduce_sum(loss_conf),
                                            tf.reduce_sum(loss_class)],  message='loss xy, wh, conf, class: \t',   summarize=1000)
-
-
         return loss*self.grid_scale
 
     def compute_output_shape(self, input_shape):
@@ -367,4 +365,4 @@ def create_yolov3_model(
     return [train_model, infer_model]
 
 def dummy_loss(y_true, y_pred):
-    return tf.sqrt(tf.reduce_sum(y_pred)+1e-7) # I have added small epsylon to not get NaN loss
+    return tf.sqrt(tf.reduce_sum(y_pred)) # +1e-7 I haven't added small epsylon to not get NaN loss

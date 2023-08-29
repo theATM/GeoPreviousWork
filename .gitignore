@@ -4,8 +4,11 @@ main.ipynb
 .idea
 #Used Directiries:
 datasets
+RSD-GOD
 cache
 img
+old
+predict*
 logs
 model
 predicts
@@ -14,11 +17,20 @@ pretrained
 backend.h5
 # Byte-compiled / optimized / DLL files
 __pycache__/
+utils/__pycache__
+utils/__pycache__/
+*cache*
 *.py[cod]
 *$py.class
 
 # C extensions
 *.so
+
+# Models:
+*.h5
+*.weights
+*.conv.74
+*.otf
 
 # Distribution / packaging
 .Python
