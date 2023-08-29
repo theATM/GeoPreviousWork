@@ -84,8 +84,8 @@ There are the detection results, mAP@50 on RSD-GOD dataset:
 | Val  | 0.8664  | 0.8388   |  0.9376  |  0.9217  | 0.8605 |  0.7732 |
 | Test  | 0.7995  | 0.7102   |  0.8846  |  0.9029  | 0.8283 |  0.6716 |
 
-Trained model:
-https://drive.google.com/file/d/1-cjpl_vN90dPeMPH9WslO9mMXOW4AYJp/view?usp=drive_link
+Trained model <a href="https://drive.google.com/file/d/1-cjpl_vN90dPeMPH9WslO9mMXOW4AYJp/view?usp=drive_link">DOWNLOAD</a>
+
 
 # geospatial-object-detection original README:
 The code is mainly derived from [experiencor](https://github.com/experiencor/keras-yolo3).
