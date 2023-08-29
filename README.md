@@ -75,6 +75,16 @@ RSD-GOD:
   * xml
     * labels.xml (VOC format)
 
+## Training results
+The model was trained on one gpu with batch size = 4. <br>
+There are the detection results, mAP@50 on RSD-GOD dataset:
+
+| Set  | All  | Airport   |  Helicopter  |  Oiltank  | Plane |  Warship |
+|---|---|---|---|---|---|---|
+| Val  | 0.8664  | 0.8388   |  0.9376  |  0.9217  | 0.8605 |  0.7732 |
+| Test  | 0.7995  | 0.7102   |  0.8846  |  0.9029  | 0.8283 |  0.6716 |
+
+
 
 # geospatial-object-detection original README:
 The code is mainly derived from [experiencor](https://github.com/experiencor/keras-yolo3).
