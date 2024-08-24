@@ -17,7 +17,7 @@ Main improvement over the existing code is an addition of a Docker based trainin
 
 
 ## Dockerfile
-To run the training process on modern gpu (RTX 3060 with CUDA 11.7) one needs to install docker image with old versions of the Tensorflow lib.
+This code works of cpu. To run the training process on modern gpu (RTX 3060 with CUDA 11.7) one needs to install docker image with old versions of the Tensorflow 1.15 lib  which is sadly not supported. A workaround is to use following dockerfile.
 A dockerfile should contain those six lines of code (found in the docker/dockerNvi file):
 
 * FROM nvcr.io/nvidia/tensorflow:22.11-tf1-py3
@@ -58,7 +58,7 @@ Nevertheless, the main.ipynb is a working coolab code  (dataset needs to be on g
 
 Please insert dataset (works with the RSD-GOD dataset) with specified structure (or change it in the config.json file):
 
-RSD-GOD:
+RSD-GOD [(download link)](https://drive.google.com/open?id=1ttvSta0BRxW7tTV_st89vSb_obHVre34):
 * testingsets
   * image
     * images.jpg
@@ -84,26 +84,8 @@ There are the detection results, mAP@50 on RSD-GOD dataset:
 | Val  | 0.8664  | 0.8388   |  0.9376  |  0.9217  | 0.8605 |  0.7732 |
 | Test  | 0.7995  | 0.7102   |  0.8846  |  0.9029  | 0.8283 |  0.6716 |
 
-Trained model <a href="https://drive.google.com/file/d/1-cjpl_vN90dPeMPH9WslO9mMXOW4AYJp/view?usp=drive_link">DOWNLOAD</a>
+Trained model O2 <a href="https://drive.google.com/file/d/1XbCKVi2A16a5E_rcWITa9IeLb5F1SGnt/view?usp=sharing">DOWNLOAD</a>
+
+### Original README [Here](README_ORIGINAL.md)
 
 
-# geospatial-object-detection original README:
-The code is mainly derived from [experiencor](https://github.com/experiencor/keras-yolo3).
-
-Installs:
-to use newer gpu install :
-(used with python 3.8)
-nvidia-pyindex==1.0.5
-nvidia-tensorflow[horovod] (and no tensorflow-gpu==1.15.5)
-or use cpu
-
-
-
-# Paper：
-Zhuang S, Wang P, Jiang B, et al. A Single Shot Framework with Multi-Scale Feature Fusion for Geospatial Object Detection[J]. Remote Sensing, 2019, 11(5): 594.
-
-Considering the practical applications especially in military field, five categories are selected to be annotated, including plane, helicopter, oiltank, airport and warship. Finally, we construct a large-scale remote sensing dataset for geospatial object detection, which totally contains 18,187 color images with multiple resolutions from multiple platforms like Google Earth. There are 40,990 well-annotated instances in the dataset. The width of each image is mostly about 300~600 pixels. To increase the diversity of samples, we collect these remote-sensing images from different places at different times. 
-
-## RSD-GOD dataset
-The RSD-GOD dataset is avaliable at: [Google drive](https://drive.google.com/open?id=1ttvSta0BRxW7tTV_st89vSb_obHVre34);
-also avaliable at: [baiduyun](https://pan.baidu.com/s/11J6n-CoMQ_EtFdx_KUs4PA).
