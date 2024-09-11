@@ -1,4 +1,4 @@
-# geo-detection-notebook
+# Previous Work 
 
 This code is part of the Magister Thesis.
 It is a fork of the https://github.com/Dr-Zhuang/geospatial-object-detection
